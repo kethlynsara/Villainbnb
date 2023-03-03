@@ -3,6 +3,6 @@ import { validateData } from "../middlewares/baseMiddleware.js";
 
 const baseRouter = Router();
 
-baseRouter.post("/base", validateData);
+baseRouter.post("/base/create", validateData);
 
 export default baseRouter;
