@@ -7,12 +7,12 @@ export interface CreateBaseData {
     facade: string[],
     city: string,
     technologies: string[],
-    meanTemp?: string
+    meanTemp?: number
 };
 
 async function getByTitle(title: string) {
     try {
-        const base = await Base.find({title});
+        const base = Base.find({title});
         return base;
     } catch (error) {
         console.log(error);
@@ -23,7 +23,7 @@ async function insert(data: CreateBaseData) {
     const base = new Base({
         title: data.title,
         city: data.city,
-        meanTemp: 35
+        meanTemp: data.meanTemp
     });
 
     try {
