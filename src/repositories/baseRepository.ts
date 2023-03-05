@@ -1,20 +1,47 @@
-// import db from "../config/db.js";
+import { Base } from "../models/base.js";
+import { Facade } from "../models/facade.js";
+import { Tech } from "../models/technology.js";
 
-export interface Base {
-    id: number,
+export interface CreateBaseData {
     title: string,
-    facade: string,
+    facade: string[],
     city: string,
-    technology: string
+    technologies: string[],
+    meanTemp?: string
 };
 
-export type CreateBaseData = Omit<Base, "id">;
+async function insert(data: CreateBaseData) {
+    const base = new Base({
+        title: data.title,
+        city: data.city,
+        meanTemp: 35
+    });
 
-// async function getByTitle(name: string) {
-//     const book = await db.collection("bases").findOne({title: name});
-//     console.log('rep', book);
-// }
+    try {
+        const doc = await base.save();
+        console.log('doc', doc)
 
-// async function insert(data: CreateBaseData) {
-//     return await db.collection("bases").insertOne(data);
-// }
+        data.facade.forEach(async (fac) => {
+            const facade = new Facade({
+                name: fac,
+                baseId: doc._id
+            });
+            await facade.save();
+        });
+
+        data.technologies.forEach(async (tech) => {
+            const technology = new Tech({
+                name: tech,
+                baseId: doc._id
+            });
+            await technology.save();
+        });
+        
+    } catch (error) {
+        console.log('db err', error);
+    }
+}
+
+export const baseRepository = {
+    insert
+}
