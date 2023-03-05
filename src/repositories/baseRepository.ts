@@ -10,6 +10,15 @@ export interface CreateBaseData {
     meanTemp?: string
 };
 
+async function getByTitle(title: string) {
+    try {
+        const base = await Base.find({title});
+        return base;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 async function insert(data: CreateBaseData) {
     const base = new Base({
         title: data.title,
@@ -43,5 +52,6 @@ async function insert(data: CreateBaseData) {
 }
 
 export const baseRepository = {
-    insert
+    insert,
+    getByTitle
 }
