@@ -11,12 +11,8 @@ export interface CreateBaseData {
 };
 
 async function getByTitle(title: string) {
-    try {
-        const base = Base.find({title});
-        return base;
-    } catch (error) {
-        console.log(error);
-    }
+    const base = await Base.find({title});
+    return base;
 }
 
 async function insert(data: CreateBaseData) {
@@ -26,32 +22,30 @@ async function insert(data: CreateBaseData) {
         meanTemp: data.meanTemp
     });
 
-    try {
-        const doc = await base.save();
-        console.log('doc', doc)
+    const doc = await base.save();
 
-        data.facade.forEach(async (fac) => {
-            const facade = new Facade({
-                name: fac,
-                baseId: doc._id
-            });
-            await facade.save();
+    data.facade.forEach(async (fac) => {
+        const facade = new Facade({
+            name: fac,
+            baseId: doc._id
         });
+        await facade.save();
+    });
 
-        data.technologies.forEach(async (tech) => {
-            const technology = new Tech({
-                name: tech,
-                baseId: doc._id
-            });
-            await technology.save();
+    data.technologies.forEach(async (tech) => {
+        const technology = new Tech({
+            name: tech,
+            baseId: doc._id
         });
-        
-    } catch (error) {
-        console.log('db err', error);
-    }
+        await technology.save();
+    });
 }
 
 export const baseRepository = {
     insert,
     getByTitle
+}
+
+function then(arg0: (doc: any) => any) {
+    throw new Error("Function not implemented.");
 }
