@@ -3,7 +3,7 @@ import { CreateBaseData } from "../repositories/baseRepository.js";
 import { baseService } from "../services/baseService.js";
 
 export async function findAll(req: Request, res: Response) {
-    const bases = await baseService.findAll();
+    const bases: CreateBaseData[] = await baseService.findAll();
     res.send(bases);
 }
 

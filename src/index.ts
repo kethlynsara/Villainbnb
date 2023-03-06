@@ -12,4 +12,5 @@ try {
     });
 } catch (error) {
     console.log(error);
+    throw new Error("Failed to connect to database");    
 }

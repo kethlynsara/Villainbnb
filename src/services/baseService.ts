@@ -4,13 +4,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { baseRepository, CreateBaseData } from "../repositories/baseRepository.js";
-import { facadeRepository } from "../repositories/facadeRepository.js";
-import { techRepository } from "../repositories/techRepository.js";
 
 async function checkBase(title: string) {
     const base = await baseRepository.getBase(title);
-    console.log(base)
-    if (base.length !== 0) throw { type: "unauthorized", message: "base already exists" };
+    if (base.length !== 0) {
+        throw { 
+            type: "conflict", 
+            message: "base already exists" 
+        }
+    }
 }
 
 async function getMeanTemp(city: string) {
@@ -28,25 +30,7 @@ async function getMeanTemp(city: string) {
 }
 
 async function findAll() {
-    const bases = await baseRepository.findAll();
-    const techs = await techRepository.findAll();
-
-    const aux = [];
-    bases.forEach((base, index) => {
-        const techFilter = techs.filter((t) => {
-            if (base._id.toString() == t.baseId.toString()) {
-                return t.name;
-            }
-        });
-        aux[index] = { 
-            id: base._id,
-            title: base.title,
-            city: base.city,
-            meanTemp: base.meanTemp,
-            technologies: techFilter 
-        };
-    })
-    return aux;
+    return await baseRepository.findAll();
 }
 
 async function insert(data: CreateBaseData) {
@@ -56,29 +40,9 @@ async function insert(data: CreateBaseData) {
     await baseRepository.insert({...data, meanTemp});
 }
 
-async function deleteTechs(baseId: string) {
-    const techs = await techRepository.find(baseId);
-    if (techs.length !== 0) {
-        techs.forEach( async (tech) => {
-            await techRepository.remove(tech._id);
-        });
-    }
-}
-
-async function deleteFacades(baseId: string) {
-    const facades = await facadeRepository.find(baseId);
-    if (facades.length !== 0) {
-        facades.forEach( async (facade) => {
-            await facadeRepository.remove(facade._id);
-        });
-    }
-}
-
 async function remove(baseId: string) {
     const base = await baseRepository.getById(baseId);
     if (base) {
-        await deleteTechs(baseId);
-        await deleteFacades(baseId);
         await baseRepository.remove(baseId);
     } else {
         throw {
