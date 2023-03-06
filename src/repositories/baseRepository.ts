@@ -45,7 +45,3 @@ export const baseRepository = {
     insert,
     getByTitle
 }
-
-function then(arg0: (doc: any) => any) {
-    throw new Error("Function not implemented.");
-}
