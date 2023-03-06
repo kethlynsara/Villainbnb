@@ -12,3 +12,9 @@ export async function insert(req: Request, res: Response) {
     await baseService.insert(body);
     return res.sendStatus(201);
 } 
+
+export async function remove(req: Request, res: Response) {
+    const { baseId } = req.params;
+    await baseService.remove(baseId);
+    res.sendStatus(204);
+}

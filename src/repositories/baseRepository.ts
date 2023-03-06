@@ -1,4 +1,4 @@
-import { ObjectId, Schema } from "mongoose";
+import { ObjectId } from "mongodb";
 import { Base } from "../models/base.js";
 import { Facade } from "../models/facade.js";
 import { Tech } from "../models/technology.js";
@@ -15,13 +15,13 @@ async function findAll() {
     return await Base.find();
 }
 
-async function getTechs() {
-    return await Tech.find();
-}
-
-async function getByTitle(title: string) {
+async function getBase(title: string) {
     const base = await Base.find({title});
     return base;
+}
+
+async function getById(id: string) {
+    return await Base.findOne({_id: new ObjectId(id)});
 }
 
 async function insert(data: CreateBaseData) {
@@ -50,9 +50,14 @@ async function insert(data: CreateBaseData) {
     });
 }
 
+async function remove(baseId: string) {
+    return await Base.findOneAndRemove({ _id: new ObjectId(baseId)});
+}
+
 export const baseRepository = {
-    getByTitle,
-    getTechs,
+    getBase,
+    getById,
     findAll,
     insert,
+    remove
 }

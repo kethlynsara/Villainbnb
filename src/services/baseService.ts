@@ -4,9 +4,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { baseRepository, CreateBaseData } from "../repositories/baseRepository.js";
+import { facadeRepository } from "../repositories/facadeRepository.js";
+import { techRepository } from "../repositories/techRepository.js";
 
-async function checkTitle(title: string) {
-    const base = await baseRepository.getByTitle(title);
+async function checkBase(title: string) {
+    const base = await baseRepository.getBase(title);
+    console.log(base)
     if (base.length !== 0) throw { type: "unauthorized", message: "base already exists" };
 }
 
@@ -26,7 +29,7 @@ async function getMeanTemp(city: string) {
 
 async function findAll() {
     const bases = await baseRepository.findAll();
-    const techs = await baseRepository.getTechs();
+    const techs = await techRepository.findAll();
 
     const aux = [];
     bases.forEach((base, index) => {
@@ -47,13 +50,46 @@ async function findAll() {
 }
 
 async function insert(data: CreateBaseData) {
-    await checkTitle(data.title);
+    await checkBase(data.title);
     const meanTempString: string = await getMeanTemp(data.city);
     const meanTemp = parseFloat(meanTempString);
     await baseRepository.insert({...data, meanTemp});
 }
 
+async function deleteTechs(baseId: string) {
+    const techs = await techRepository.find(baseId);
+    if (techs.length !== 0) {
+        techs.forEach( async (tech) => {
+            await techRepository.remove(tech._id);
+        });
+    }
+}
+
+async function deleteFacades(baseId: string) {
+    const facades = await facadeRepository.find(baseId);
+    if (facades.length !== 0) {
+        facades.forEach( async (facade) => {
+            await facadeRepository.remove(facade._id);
+        });
+    }
+}
+
+async function remove(baseId: string) {
+    const base = await baseRepository.getById(baseId);
+    if (base) {
+        await deleteTechs(baseId);
+        await deleteFacades(baseId);
+        await baseRepository.remove(baseId);
+    } else {
+        throw {
+            type: "not found",
+            message: "base not found"
+        }
+    }
+}
+
 export const baseService = {
     findAll,
-    insert
+    insert,
+    remove
 }

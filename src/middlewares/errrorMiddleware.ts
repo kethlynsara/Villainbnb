@@ -5,6 +5,8 @@ export function errorHandler(error, req: Request, res: Response, next: NextFunct
     if (error.type) {
         return res.status(errorTypeToStatusCode(error.type)).send(error.message);
     }
+
+    return res.sendStatus(500);
 }
 
 function errorTypeToStatusCode(errorType: string) {
