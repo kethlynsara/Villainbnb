@@ -24,6 +24,28 @@ async function getMeanTemp(city: string) {
     return sum.toFixed(1);
 }
 
+async function findAll() {
+    const bases = await baseRepository.findAll();
+    const techs = await baseRepository.getTechs();
+
+    const aux = [];
+    bases.forEach((base, index) => {
+        const techFilter = techs.filter((t) => {
+            if (base._id.toString() == t.baseId.toString()) {
+                return t.name;
+            }
+        });
+        aux[index] = { 
+            id: base._id,
+            title: base.title,
+            city: base.city,
+            meanTemp: base.meanTemp,
+            technologies: techFilter 
+        };
+    })
+    return aux;
+}
+
 async function insert(data: CreateBaseData) {
     await checkTitle(data.title);
     const meanTempString: string = await getMeanTemp(data.city);
@@ -32,5 +54,6 @@ async function insert(data: CreateBaseData) {
 }
 
 export const baseService = {
+    findAll,
     insert
 }

@@ -1,3 +1,4 @@
+import { ObjectId, Schema } from "mongoose";
 import { Base } from "../models/base.js";
 import { Facade } from "../models/facade.js";
 import { Tech } from "../models/technology.js";
@@ -9,6 +10,14 @@ export interface CreateBaseData {
     technologies: string[],
     meanTemp?: number
 };
+
+async function findAll() {
+    return await Base.find();
+}
+
+async function getTechs() {
+    return await Tech.find();
+}
 
 async function getByTitle(title: string) {
     const base = await Base.find({title});
@@ -42,6 +51,8 @@ async function insert(data: CreateBaseData) {
 }
 
 export const baseRepository = {
+    getByTitle,
+    getTechs,
+    findAll,
     insert,
-    getByTitle
 }
