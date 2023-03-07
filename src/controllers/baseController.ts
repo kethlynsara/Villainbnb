@@ -27,6 +27,12 @@ export async function insert(req: Request, res: Response) {
     return res.sendStatus(201);
 } 
 
+export async function update(req: Request, res: Response) {
+    const { body } = req;
+    await baseService.update(body.baseId, body.data);
+    return res.sendStatus(204);
+}
+
 export async function remove(req: Request, res: Response) {
     const { baseId } = req.params;
     await baseService.remove(baseId);

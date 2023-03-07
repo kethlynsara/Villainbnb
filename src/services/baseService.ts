@@ -13,6 +13,7 @@ async function checkBase(title: string) {
             message: "base already exists" 
         }
     }
+    return base;
 }
 
 async function getMeanTemp(city: string) {
@@ -44,6 +45,21 @@ async function insert(data: CreateBaseData) {
     await baseRepository.insert({...data, meanTemp});
 }
 
+async function update(baseId: string, data: CreateBaseData) {
+    const base = await baseRepository.getById(baseId);
+    if (base) {
+        await checkBase(data.title);
+        const meanTempString: string = await getMeanTemp(data.city);
+        const meanTemp = parseFloat(meanTempString);
+        await baseRepository.update(baseId, {...data, meanTemp});
+    } else {
+        throw {
+            type: "not found",
+            message: "base not found"
+        }
+    }
+}
+
 async function remove(baseId: string) {
     const base = await baseRepository.getById(baseId);
     if (base) {
@@ -56,10 +72,10 @@ async function remove(baseId: string) {
     }
 }
 
-
 export const baseService = {
     getByParameter,
     findAll,
     insert,
+    update,
     remove,
 }
