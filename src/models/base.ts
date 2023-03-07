@@ -5,7 +5,8 @@ export interface IBase {
     facade: string[]
     city: string,
     meanTemp: number;
-    technologies: string[]
+    technologies: string[],
+    villain: string
 }
 
 const baseSchema = new Schema<IBase>({
@@ -24,7 +25,8 @@ const baseSchema = new Schema<IBase>({
         type: [String],
         enum: ["laboratório de nanotecnologia", "jardim de ervas venenosas", "estande de tiro", "academia de parkour"],
         required: true
-    }
+    },
+    villain: { type: String, default: null },
 });
 
 export const Base = model<IBase>("Base", baseSchema);

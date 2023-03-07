@@ -17,6 +17,7 @@ export async function findAll(req: Request, res: Response) {
     } else {
         bases = await baseService.findAll();    
     }    
+
     return res.send(bases);
 }
 
@@ -30,11 +31,17 @@ export async function update(req: Request, res: Response) {
     const { id } = req.params;
     const { body } : { body: CreateBaseData} = req;
     await baseService.update(id, body);
-    return res.sendStatus(204);
+    return res.status(204).send("Base updated successfully!");
 }
 
 export async function remove(req: Request, res: Response) {
     const { baseId } = req.params;
     await baseService.remove(baseId);
-    res.sendStatus(204);
+    return res.status(204).send("Successfully removed base!");
+}
+
+export async function rentBase(req: Request, res: Response) {
+    const { title, villainName, password }: { title:string, villainName: string, password: string } = req.body;
+    const facadeName = await baseService.rentBase(title, villainName, password);
+    return res.send(facadeName);
 }

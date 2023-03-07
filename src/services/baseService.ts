@@ -5,7 +5,7 @@ dotenv.config();
 
 import { baseRepository, CreateBaseData } from "../repositories/baseRepository.js";
 
-async function checkBase(title: string, operation: "insert" | "update") {
+async function checkBase(title: string, operation: "insert" | "update" | "rent") {
     const base = await baseRepository.getByParameter("title", title);
     if (base.length !== 0 && operation == "insert") {
         throw { 
@@ -79,10 +79,36 @@ async function remove(baseId: string) {
     }
 }
 
+async function checkPassword(villainPassword: string) {
+    if (villainPassword !== process.env.VILLAIN_PASSWORD) {
+        throw {
+            type: "unauthorized",
+            message: "Wrong password!"
+        }
+    }
+}
+
+async function rentBase(title: string, villain: string, password: string) {
+    await checkPassword(password);
+    const data = await checkBase(title, "rent");
+    const base = await baseRepository.getById(data[0]._id.toString());
+
+    if (!base.villain) {
+        await baseRepository.postRent(base._id.toString(), villain);
+        return { facadeName: base.facade };
+    } else {
+        throw {
+            type: "conflict",
+            message: "Base is already rented!"
+        }
+    }
+}
+
 export const baseService = {
     getByParameter,
     findAll,
     insert,
     update,
     remove,
+    rentBase
 }

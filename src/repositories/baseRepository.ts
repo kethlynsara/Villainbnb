@@ -6,7 +6,9 @@ export interface CreateBaseData {
     facade: string[],
     city: string,
     technologies: string[],
-    meanTemp?: number
+    meanTemp?: number,
+    isRented?: boolean,
+    villain?: string
 }
 
 export interface UpdateBaseData {
@@ -46,6 +48,10 @@ async function remove(baseId: string) {
     return await Base.findOneAndRemove({ _id: new ObjectId(baseId)});
 }
 
+async function postRent(baseId: string, villainName: string) {
+    return await Base.findOneAndUpdate({ _id: new ObjectId(baseId) }, { villain: villainName });
+}
+
 export const baseRepository = {
     getByParameter,
     getById,
@@ -53,4 +59,5 @@ export const baseRepository = {
     insert,
     update,
     remove,
+    postRent
 }
