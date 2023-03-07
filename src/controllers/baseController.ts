@@ -3,7 +3,21 @@ import { CreateBaseData } from "../repositories/baseRepository.js";
 import { baseService } from "../services/baseService.js";
 
 export async function findAll(req: Request, res: Response) {
-    const bases: CreateBaseData[] = await baseService.findAll();
+    const title = req.query.title;
+    const city = req.query.city;
+    const tech = req.query.tech;
+    let bases: CreateBaseData[];
+
+    if (title) {
+        bases = await baseService.getByParameter("title", title.toString());
+    } else if (city) {
+        bases = await baseService.getByParameter("city", city.toString());
+    } else if (tech) {
+        bases = await baseService.getByParameter("technologies", tech.toString());
+    } else {
+        bases = await baseService.findAll();    
+    }
+    
     res.send(bases);
 }
 

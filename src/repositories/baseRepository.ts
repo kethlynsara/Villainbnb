@@ -13,13 +13,12 @@ async function findAll() {
     return await Base.find().select('_id title city meanTemp technologies');
 }
 
-async function getBase(title: string) {
-    const base = await Base.find({title});
-    return base;
-}
-
 async function getById(id: string) {
     return await Base.findOne({_id: new ObjectId(id)});
+}
+
+async function getByParameter(field: string, value: string) {
+    return await Base.find({}).where(`${field}`).equals(value).select('_id title city meanTemp technologies');
 }
 
 async function insert(data: CreateBaseData) {
@@ -32,9 +31,9 @@ async function remove(baseId: string) {
 }
 
 export const baseRepository = {
-    getBase,
     getById,
     findAll,
     insert,
-    remove
+    remove,
+    getByParameter
 }
