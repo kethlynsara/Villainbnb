@@ -5,12 +5,19 @@ dotenv.config();
 
 import { baseRepository, CreateBaseData } from "../repositories/baseRepository.js";
 
-async function checkBase(title: string) {
+async function checkBase(title: string, operation: "insert" | "update") {
     const base = await baseRepository.getByParameter("title", title);
-    if (base.length !== 0) {
+    if (base.length !== 0 && operation == "insert") {
         throw { 
             type: "conflict", 
             message: "base already exists" 
+        }
+    }
+
+    if (base.length !== 0 && operation == "update") {
+        throw { 
+            type: "conflict", 
+            message: "title already exists" 
         }
     }
     return base;
@@ -39,7 +46,7 @@ async function findAll() {
 }
 
 async function insert(data: CreateBaseData) {
-    await checkBase(data.title);
+    await checkBase(data.title, "insert");
     const meanTempString: string = await getMeanTemp(data.city);
     const meanTemp = parseFloat(meanTempString);
     await baseRepository.insert({...data, meanTemp});
@@ -48,7 +55,7 @@ async function insert(data: CreateBaseData) {
 async function update(baseId: string, data: CreateBaseData) {
     const base = await baseRepository.getById(baseId);
     if (base) {
-        await checkBase(data.title);
+        await checkBase(data.title, "update");
         const meanTempString: string = await getMeanTemp(data.city);
         const meanTemp = parseFloat(meanTempString);
         await baseRepository.update(baseId, {...data, meanTemp});

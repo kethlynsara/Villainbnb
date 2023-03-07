@@ -6,7 +6,7 @@ const baseRouter = Router();
 
 baseRouter.get("/base", findAll);
 baseRouter.post("/base/create", validateData, insert);
-baseRouter.put("/base", update);
+baseRouter.put("/base/:id", update);
 baseRouter.delete("/base/:baseId", remove);
 
 export default baseRouter;

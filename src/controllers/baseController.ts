@@ -16,9 +16,8 @@ export async function findAll(req: Request, res: Response) {
         bases = await baseService.getByParameter("technologies", tech.toString());
     } else {
         bases = await baseService.findAll();    
-    }
-    
-    res.send(bases);
+    }    
+    return res.send(bases);
 }
 
 export async function insert(req: Request, res: Response) {
@@ -28,8 +27,9 @@ export async function insert(req: Request, res: Response) {
 } 
 
 export async function update(req: Request, res: Response) {
-    const { body } = req;
-    await baseService.update(body.baseId, body.data);
+    const { id } = req.params;
+    const { body } : { body: CreateBaseData} = req;
+    await baseService.update(id, body);
     return res.sendStatus(204);
 }
 
