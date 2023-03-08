@@ -30,14 +30,23 @@ export async function insert(req: Request, res: Response) {
 export async function update(req: Request, res: Response) {
     const { id } = req.params;
     const { body } : { body: CreateBaseData} = req;
-    await baseService.update(id, body);
-    return res.status(204).send("Base updated successfully!");
+
+    if (id) {
+        await baseService.update(id, body);
+        return res.status(204).send("Base updated successfully!");
+    } else {
+        return res.sendStatus(400);
+    }
 }
 
 export async function remove(req: Request, res: Response) {
     const { baseId } = req.params;
-    await baseService.remove(baseId);
-    return res.status(204).send("Successfully removed base!");
+    if (baseId) {
+        await baseService.remove(baseId);
+        return res.status(204).send("Successfully removed base!");
+    } else {
+        return res.sendStatus(400);
+    }
 }
 
 export async function rentBase(req: Request, res: Response) {

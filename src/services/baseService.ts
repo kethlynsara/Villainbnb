@@ -20,6 +20,13 @@ async function checkBase(title: string, operation: "insert" | "update" | "rent")
             message: "title already exists" 
         }
     }
+
+    if (base.length == 0 && operation == "rent") {
+        throw { 
+            type: "not found", 
+            message: "base not found" 
+        }
+    }
     return base;
 }
 
