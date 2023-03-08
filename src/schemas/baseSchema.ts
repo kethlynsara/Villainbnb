@@ -1,5 +1,5 @@
 import joi from "joi";
-import { CreateBaseData, UpdateBaseData } from "../repositories/baseRepository.js";
+import { CreateBaseData } from "../repositories/baseRepository.js";
 
 export const schema = joi.object<CreateBaseData>({
     title: joi.string().required(),

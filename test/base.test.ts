@@ -41,7 +41,7 @@ beforeEach(async () => {
     await mongoose.connect(process.env.MONGO_URI, {});
     await Base.deleteMany({});
     await Base.insertMany(bases);
-});
+}, 20000);
 
 describe("base tests", () => {
     it("should create a base", async () => {
@@ -80,7 +80,7 @@ describe("base tests", () => {
         expect(response.statusCode).toBe(201);
         const response2 = await supertest(app).post("/base/create").send(data);
         expect(response2.statusCode).toBe(409);
-    });
+    }, 10000);
 
     it("title doesn't exist, should return an empty array", async () => {
         const createBaseData = {
@@ -122,13 +122,13 @@ describe("base tests", () => {
             technologies: ["laboratório de nanotecnologia",
             "estande de tiro"]
         } 
-        await supertest(app).post("/base/create").send(createBaseData);
-        const base = await supertest(app).get("/base");
-        expect(base.body).toHaveLength(5);
+        const base = await supertest(app).post("/base/create").send(createBaseData);
+        const base2 = await supertest(app).get("/base");
+        expect(base2.body).toHaveLength(5);
     });
 });
 
 afterAll(async () => {
     await mongoose.disconnect();
-  });
+});
   

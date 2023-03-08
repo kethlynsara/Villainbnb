@@ -7,7 +7,6 @@ export interface CreateBaseData {
     city: string,
     technologies: string[],
     meanTemp?: number,
-    isRented?: boolean,
     villain?: string
 }
 
