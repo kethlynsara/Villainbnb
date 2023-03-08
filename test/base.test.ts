@@ -82,7 +82,7 @@ describe("base tests", () => {
         expect(response2.statusCode).toBe(409);
     });
 
-    it("title doesn't exist, should return a empty array", async () => {
+    it("title doesn't exist, should return an empty array", async () => {
         const createBaseData = {
             title: "Test base",
             facade: ["Test facade"],
@@ -94,6 +94,38 @@ describe("base tests", () => {
         expect(base.body).toHaveLength(0);
     });
 
+    it("should return an array of length 1, title parameter", async () => {
+        const base = await supertest(app).get(`/base?title=${bases[0].title}`);
+        expect(base.body).toHaveLength(1);
+    });
+
+    it("should return an array of length 2, tech parameter", async () => {
+        const base = await supertest(app).get(`/base?tech=${bases[1].technologies[0]}`);
+        expect(base.body).toHaveLength(2);
+    });
+
+    it("should return an array of length 2, city parameter", async () => {
+        const base = await supertest(app).get(`/base?city=${bases[3].city}`);
+        expect(base.body).toHaveLength(2);
+    });
+
+    it("should return an array of length 4, without parameters", async () => {
+        const base = await supertest(app).get("/base");
+        expect(base.body).toHaveLength(4);
+    });
+
+    it("should return an array of length 5 with all bases including the newly added base ", async () => {
+        const createBaseData = {
+            title: "Test base",
+            facade: ["Test facade"],
+            city: "Tóquio",
+            technologies: ["laboratório de nanotecnologia",
+            "estande de tiro"]
+        } 
+        await supertest(app).post("/base/create").send(createBaseData);
+        const base = await supertest(app).get("/base");
+        expect(base.body).toHaveLength(5);
+    });
 });
 
 afterAll(async () => {
