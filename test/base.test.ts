@@ -93,6 +93,7 @@ describe("base tests", () => {
         const base = await supertest(app).get(`/base?title=${createBaseData.title}`);
         expect(base.body).toHaveLength(0);
     });
+
 });
 
 afterAll(async () => {
