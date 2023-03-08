@@ -33,5 +33,4 @@ $ npm run dev
 	<img src="https://img.shields.io/badge/TypeScript-be1931?style=for-the-badge&logo=typescript&logoColor=white" >
 	<img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" >
 	<img src="https://img.shields.io/badge/MongoDB-be1931?style=for-the-badge&logo=mongodb&logoColor=white" >
-	<img src="https://img.shields.io/badge/Heroku-000000?style=for-the-badge&logo=heroku&logoColor=white" >
 </div>
