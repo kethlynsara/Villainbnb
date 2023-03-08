@@ -10,6 +10,7 @@
 - [x] Delete a base
 - [x] Rent a base
 - [x] List all bases or list bases with parameters through query string
+- [x] Thunder client requests collection 
 
 ## Usage
 
